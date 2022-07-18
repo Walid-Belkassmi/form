@@ -1,25 +1,71 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import Form from './component/Form'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component{
+  constructor(){
+    super()
+
+    this.state = {
+      email: "",
+      password: "",
+      rememberMe: false,
+      emailIsValid: false,
+      passwordIsValid: false,
+      isSubmitted: false
+    }
+  }
+
+  
+handleEmailChange = (e) => {
+  const regex = new RegExp(/^[\w\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+
+  this.setState({email: e.target.value})
+  if(regex.test(this.state.email)){
+    this.setState({emailIsValid: true})
+  }else{
+    this.setState({emailIsValid: false})
+  }
 }
 
-export default App;
+handlePasswordChange = (e) => {
+  this.setState({password: e.target.value})
+  if((this.state.password).length > 5){
+    this.setState({passwordIsValid: true})
+  }else{
+    this.setState({passwordIsValid: false})
+  }
+}
+
+handleRememberMeChange = (e) => {
+  this.setState({rememberMe : e.target.checked})
+}
+
+handleSubmit = (e) => {
+  e.preventDefault()
+
+  if(this.state.emailIsValid && this.state.passwordIsValid){
+    this.setState({isSubmitted : true})
+  }else{
+    this.setState({isSubmitted : false})
+  }
+}
+
+
+  render(){
+    console.log(this.state.emailIsValid)
+    return(
+      <div className='Container'>
+
+            <Form
+              mailChange = {this.handleEmailChange}
+              passwordChange = {this.handlePasswordChange}
+              checkChange = {this.handleRememberMeChange}
+              submit = {this.handleSubmit}
+            />
+            
+      </div>
+    )
+  }
+}
+
+export default App
