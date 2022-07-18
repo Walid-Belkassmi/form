@@ -11,7 +11,9 @@ class App extends React.Component{
       rememberMe: false,
       emailIsValid: false,
       passwordIsValid: false,
-      isSubmitted: false
+      isSubmitted: false,
+      firsName: "",
+      lastName: ""
     }
   }
 
@@ -50,18 +52,30 @@ handleSubmit = (e) => {
   }
 }
 
+handleFirstNameChange = (e) => {
+  this.setState({firsName : e.target.value})
+}
+
+handleLastNameChange = (e) => {
+  this.setState({lastName : e.target.value})
+}
 
   render(){
     console.log(this.state.emailIsValid)
     return(
       <div className='Container'>
 
-            <Form
-              mailChange = {this.handleEmailChange}
-              passwordChange = {this.handlePasswordChange}
-              checkChange = {this.handleRememberMeChange}
-              submit = {this.handleSubmit}
-            />
+            {
+              this.state.isSubmitted ? <h2>You are connect</h2> :
+              <Form
+                mailChange = {this.handleEmailChange}
+                passwordChange = {this.handlePasswordChange}
+                checkChange = {this.handleRememberMeChange}
+                submit = {this.handleSubmit}
+                firstName = {this.handleFirstNameChange}
+                lastName = {this.handleLastNameChange}
+              />
+            }
             
       </div>
     )
