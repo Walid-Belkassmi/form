@@ -1,8 +1,7 @@
-import React from 'react'
-import Form from './component/Form'
+import React, { Component } from "react"
 
-class App extends React.Component{
-  constructor(){
+class App extends Component {
+  constructor() {
     super()
 
     this.state = {
@@ -11,73 +10,93 @@ class App extends React.Component{
       rememberMe: false,
       emailIsValid: false,
       passwordIsValid: false,
-      isSubmitted: false,
-      firsName: "",
-      lastName: ""
+      isSubmitted: false
     }
   }
 
-  
-handleEmailChange = (e) => {
-  const regex = new RegExp(/^[\w\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+  handleEmailChange = e => {
+    const value = e.target.value
+    const regEx = new RegExp(/^[\w\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+    const isValid = regEx.test(value)
 
-  this.setState({email: e.target.value})
-  if(regex.test(this.state.email)){
-    this.setState({emailIsValid: true})
-  }else{
-    this.setState({emailIsValid: false})
+    this.setState({
+      email: value,
+      emailIsValid: isValid
+    })
   }
-}
 
-handlePasswordChange = (e) => {
-  this.setState({password: e.target.value})
-  if((this.state.password).length > 5){
-    this.setState({passwordIsValid: true})
-  }else{
-    this.setState({passwordIsValid: false})
+  handlePasswordChange = e => {
+    const value = e.target.value
+    const isValid = value.length > 5
+    
+    this.setState({
+      password: value,
+      passwordIsValid: isValid
+    })
   }
-}
 
-handleRememberMeChange = (e) => {
-  this.setState({rememberMe : e.target.checked})
-}
-
-handleSubmit = (e) => {
-  e.preventDefault()
-
-  if(this.state.emailIsValid && this.state.passwordIsValid){
-    this.setState({isSubmitted : true})
-  }else{
-    this.setState({isSubmitted : false})
+  handleRememberMeChange = e => {
+    this.setState({ rememberMe: e.target.checked })
   }
-}
 
-handleFirstNameChange = (e) => {
-  this.setState({firsName : e.target.value})
-}
+  handleSubmit = e => {
+    e.preventDefault()
+    const allIsValid = this.state.passwordIsValid && this.state.emailIsValid
 
-handleLastNameChange = (e) => {
-  this.setState({lastName : e.target.value})
-}
+    this.setState({ isSubmitted: allIsValid })
+  }
 
-  render(){
-    console.log(this.state.emailIsValid)
-    return(
-      <div className='Container'>
+  render() {
+    const emailInputClass = this.state.emailIsValid ? 'is-valid' : 'is-invalid'
+    const passwordInputClass = this.state.passwordIsValid ? 'is-valid' : 'is-invalid'
 
-            {
-              this.state.isSubmitted ? <h2>You are connect</h2> :
-              <Form
-                mailChange = {this.handleEmailChange}
-                passwordChange = {this.handlePasswordChange}
-                checkChange = {this.handleRememberMeChange}
-                submit = {this.handleSubmit}
-                firstName = {this.handleFirstNameChange}
-                lastName = {this.handleLastNameChange}
-              />
-            }
-            
-      </div>
+    return (
+      <>
+        <h1 className="text-center mt-5">Login</h1>
+        <div className="container d-flex justify-content-center mt-5">
+          {
+            this.state.isSubmitted ? (
+              <div>
+                <p>{this.state.email}</p>
+              </div>
+            ) : (
+                <form
+                  className="col-10"
+                  onSubmit={this.handleSubmit}
+                >
+                  <div className="mb-3">
+                    <label htmlFor="email" className="form-label">Email address</label>
+                    <input
+                      type="email"
+                      className={`form-control ${emailInputClass}`}
+                      id="email"
+                      onChange={this.handleEmailChange}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="password" className="form-label">Password</label>
+                    <input
+                      type="password"
+                      className={`form-control ${passwordInputClass}`}
+                      id="password"
+                      onChange={this.handlePasswordChange}
+                    />
+                  </div>
+                  <div className="mb-3 form-check">
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      id="remember-me"
+                      onChange={this.handleRememberMeChange}
+                    />
+                    <label className="form-check-label" htmlFor="remember-me">Remember me</label>
+                  </div>
+                  <button type="submit" className="btn btn-primary">Submit</button>
+                </form>
+            )
+          }
+        </div>
+      </>
     )
   }
 }
